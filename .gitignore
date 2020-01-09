@@ -1,0 +1,15 @@
+# Snakemake files
+.snakemake
+logs/
+
+# Data folders
+data/
+data/references
+data/reads
+data/qc
+data/trimmed
+results/
+uniprot_ref/
+
+# Server files
+slurm*

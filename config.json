@@ -1,0 +1,37 @@
+{
+    "datasets":
+    {
+        "DS51": "NS.1236.002.NEBNext_dual_i7_D3---NEBNext_dual_i5_D3.DS51",
+        "116RU1": "NS.1236.002.NEBNext_dual_i7_E7---NEBNext_dual_i5_E7.116RU1",
+        "DS5I1": "NS.1236.002.NEBNext_dual_i7_G3---NEBNext_dual_i5_G3.DS5I1",
+        "todo": "todo"
+    },
+    "TEST_datasets":
+    {
+        "HBR1": "TEST_HBR1",
+        "HBR2": "TEST_HBR2",
+        "HBR3": "TEST_HBR3",
+        "UHR1": "TEST_UHR1",
+        "UHR2": "TEST_UHR2",
+        "UHR3": "TEST_UHR3",
+    },
+    "download":
+    {
+        "annotation": "ftp://ftp.ensembl.org/pub/release-98/gtf/homo_sapiens/Homo_sapiens.GRCh38.98.chr.gtf.gz",
+        "genome": "ftp://ftp.ensembl.org/pub/release-98/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
+    },
+    "path":
+    {
+        "annotation": "data/references/annotation.gtf",
+        "genome": "data/references/genome.fa",
+        "transcriptome": "data/references/transcriptome.fa",
+        "gene_name" : "data/references/gene_name.txt"
+    },
+    "TEST_path":
+    {
+        "annotation": "data/ref_test/chr22_with_ERCC92.gtf",
+        "genome": "data/ref_test/chr22_with_ERCC92.fa",
+        "transcriptome": "data/ref_test/chr22_with_ERCC92_transcriptome.fa",
+        "gene_name" : "data/ref_test/gene_name.txt"
+    }
+}

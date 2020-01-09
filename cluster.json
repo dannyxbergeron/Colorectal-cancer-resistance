@@ -1,0 +1,48 @@
+{
+    "__default__":
+    {
+        "job-name": "SM.{rule}",
+        "nodes": "1",
+        "cpus-per-task": "1",
+        "mem": "8G",
+        "time": "0-2:30:00",
+        "mail-user": "YOUR@EMAIL.HERE",
+        "mail-type": "FAIL"
+    },
+    "split_sra_datasets":
+    {
+        "cpus-per-task": "1",
+	    "mem": "8G",
+        "time": "0-5:00:00"
+    },
+    "trimming":
+    {
+        "cpus-per-task": "4",
+	    "mem": "16G",
+        "time": "0-3:00:00"
+    },
+    "qc":
+    {
+        "cpus-per-task": "16",
+	    "mem": "32G",
+        "time": "0-2:30:00"
+    },
+    "kallisto_index":
+    {
+        "cpus-per-task": "1",
+	    "mem": "16G",
+        "time": "0-2:30:00"
+    },
+    "kallisto_quant":
+    {
+        "cpus-per-task": "8",
+	    "mem": "16G",
+        "time": "0-2:30:00"
+    },
+    "DESeq2":
+    {
+        "cpus-per-task": "1",
+	    "mem": "16G",
+        "time": "0-2:30:00"
+    },
+}

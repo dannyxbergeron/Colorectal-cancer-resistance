@@ -1,0 +1,128 @@
+
+rule trimming:
+    """ Trims the FASTQ files using Trimmomatic """
+    input:
+        fq1 = rules.bam2FastQ.output.fq1,
+        fq2 = rules.bam2FastQ.output.fq2
+    output:
+        fq1 = "data/trimmed/{id}_1.fastq.gz",
+        fq2 = "data/trimmed/{id}_2.fastq.gz",
+        unpaired_fq1 = "data/trimmed/{id}_1.unpaired.fastq.gz",
+        unpaired_fq2 = "data/trimmed/{id}_2.unpaired.fastq.gz"
+    params:
+        options = [
+            "ILLUMINACLIP:data/adapters.fa:2:30:10", "LEADING:5",
+            "TRAILING:5", "MINLEN:45"
+        ]
+    log:
+        "logs/trimmomatic/{id}.log"
+    # threads:
+    #     32
+    conda:
+        "../envs/trimmomatic.yaml"
+    shell:
+        "trimmomatic PE "
+        "-threads {threads} "
+        "-phred33 "
+        "{input.fq1} {input.fq2} "
+        "{output.fq1} {output.unpaired_fq1}  "
+        "{output.fq2} {output.unpaired_fq2} "
+        "{params.options} "
+        "&> {log}"
+
+
+rule qc:
+    """ Assess the FASTQ quality using FastQC """
+    input:
+        fq1 = rules.trimming.output.fq1,
+        fq2 = rules.trimming.output.fq2,
+        unpaired_fq1 = rules.trimming.output.unpaired_fq1,
+        unpaired_fq2 = rules.trimming.output.unpaired_fq2,
+    output:
+        fq1_out = "data/qc/{id}_1_fastqc.html"
+    params:
+        out_dir = "data/qc"
+    log:
+        "logs/fastqc/{id}.log"
+    # threads:
+    #     32
+    conda:
+        "../envs/fastqc.yaml"
+    shell:
+        "fastqc "
+        "--outdir {params.out_dir} "
+        "--format fastq "
+        "--threads {threads} "
+        "{input.fq1} {input.fq2} "
+        "{input.unpaired_fq1} {input.unpaired_fq2} "
+        "&> {log}"
+
+
+rule kallisto_index:
+    """ Generates the transcriptome index for Kallisto """
+    input:
+        qc = expand("data/qc/{id}_1_fastqc.html",
+                    id=simple_id),
+        transcriptome = rules.create_transcriptome.output.seqs
+    output:
+        idx = "data/references/kallisto.idx"
+    params:
+        kmer = "31"
+    log:
+        "logs/kallisto/index.log"
+    conda:
+        "../envs/kallisto.yaml"
+    shell:
+        "kallisto index "
+        "--index={output.idx} "
+        "--kmer-size={params.kmer} "
+        "{input.transcriptome} "
+        "&> {log}"
+
+
+rule kallisto_quant:
+    """ Generates counts using Kallisto pseudo-alignment """
+    input:
+        idx = rules.kallisto_index.output.idx,
+        fq1 = rules.trimming.output.fq1,
+        fq2 = rules.trimming.output.fq2
+    output:
+        quant = "results/kallisto/{id}/abundance.tsv"
+    params:
+        bootstrap = "50",
+        outdir = "results/kallisto/{id}"
+    log:
+        "logs/kallisto/{id}.log"
+    threads:
+        32
+    conda:
+        "../envs/kallisto.yaml"
+    shell:
+        "kallisto quant "
+        "--bias "
+        "--index={input.idx} "
+        "--output-dir={params.outdir} "
+        "--bootstrap-samples={params.bootstrap} "
+        "--threads={threads} "
+        "{input.fq1} {input.fq2} "
+        "&> {log}"
+
+
+rule combine_gene_quantification:
+    """
+    Custom Python script to collect and format Kallisto results for further
+    processing.
+    """
+    input:
+        datasets = expand(
+            "results/kallisto/{id}/abundance.tsv",
+            id=config['TEST_datasets'].keys()
+        ),
+        map = rules.generate_transcriptID_geneName.output.map
+    output:
+        tpm = "results/kallisto/tpm.tsv",
+        est_counts = "results/kallisto/est_counts.tsv"
+    conda:
+        "../envs/python.yaml"
+    script:
+        "../scripts/combine_gene_quantification.py"
