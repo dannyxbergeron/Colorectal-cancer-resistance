@@ -16,8 +16,8 @@ rule trimming:
         ]
     log:
         "logs/trimmomatic/{id}.log"
-    # threads:
-    #     32
+    threads:
+         32
     conda:
         "../envs/trimmomatic.yaml"
     shell:
@@ -44,8 +44,8 @@ rule qc:
         out_dir = "data/qc"
     log:
         "logs/fastqc/{id}.log"
-    # threads:
-    #     32
+    threads:
+         32
     conda:
         "../envs/fastqc.yaml"
     shell:

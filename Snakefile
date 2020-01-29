@@ -1,20 +1,20 @@
 configfile: "config.json"
 
-simple_id = list(config['TEST_datasets'].keys())
+simple_id = list(config['datasets'].keys())
 
 rule all:
     input:
-        expand("data/reads_test/{id}_1.fastq",
+        expand("data/reads/{id}_1.fastq",
                id=simple_id),
-        expand("data/reads_test/{id}_2.fastq",
+        expand("data/reads/{id}_2.fastq",
                id=simple_id),
         tpm = "results/kallisto/tpm.tsv"
 
 rule all_downloads:
     input:
-        config['TEST_path']['annotation'],
-        config['TEST_path']['genome'],
-        config['TEST_path']['transcriptome']
+        config['path']['annotation'],
+        config['path']['genome'],
+        config['path']['transcriptome']
 
 # Adding rules to download the references files
 include: "rules/downloads.smk"

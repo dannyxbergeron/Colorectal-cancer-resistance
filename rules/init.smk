@@ -6,16 +6,16 @@ rule change_names:
     input:
         long_id_files = partial(inputLong, config)
     output:
-        simple_id_files = "data/reads_test/{id}_.bam"
+        simple_id_files = "data/reads/{id}_.bam"
     shell:
         "mv {input.long_id_files} {output.simple_id_files}"
 
 rule sort_bam:
     """ Sort the bam file by query name as suggested by mugqic """
     input:
-        bam_files = "data/reads_test/{id}_.bam"
+        bam_files = "data/reads/{id}_.bam"
     output:
-        sorted_bam_files = temp("data/reads_test/{id}_sorted.bam")
+        sorted_bam_files = temp("data/reads/{id}_sorted.bam")
     conda:
         "../envs/picard.yaml"
     shell:
@@ -27,10 +27,10 @@ rule sort_bam:
 rule bam2FastQ:
     """ Convert the bam file to the original fastq format """
     input:
-        sorted_bam_files = "data/reads_test/{id}_sorted.bam"
+        sorted_bam_files = "data/reads/{id}_sorted.bam"
     output:
-        fq1 = "data/reads_test/{id}_1.fastq",
-        fq2 = "data/reads_test/{id}_2.fastq"
+        fq1 = "data/reads/{id}_1.fastq",
+        fq2 = "data/reads/{id}_2.fastq"
     conda:
         "../envs/picard.yaml"
     shell:

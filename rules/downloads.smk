@@ -21,10 +21,10 @@ rule download_genome:
 rule create_transcriptome:
     """ Uses gffread to generate a transcriptome """
     input:
-        genome = config['TEST_path']['genome'],
-        gtf = config['TEST_path']['annotation']
+        genome = config['path']['genome'],
+        gtf = config['path']['annotation']
     output:
-        seqs = config['TEST_path']['transcriptome']
+        seqs = config['path']['transcriptome']
     conda:
         "../envs/gffread.yaml"
     shell:
@@ -36,9 +36,9 @@ rule generate_transcriptID_geneName:
     relationship
     """
     input:
-        gtf = config['TEST_path']['annotation']
+        gtf = config['path']['annotation']
     output:
-        map = config['TEST_path']['gene_name']
+        map = config['path']['gene_name']
     conda:
         "../envs/python.yaml"
     script:
