@@ -4,11 +4,12 @@ simple_id = list(config['datasets'].keys())
 
 rule all:
     input:
-        expand("data/reads/{id}_1.fastq",
-               id=simple_id),
-        expand("data/reads/{id}_2.fastq",
-               id=simple_id),
-        tpm = "results/kallisto/tpm.tsv"
+        # expand("data/reads/{id}_1.fastq",
+        #        id=simple_id),
+        # expand("data/reads/{id}_2.fastq",
+        #        id=simple_id),
+        tpm = "results/kallisto/tpm.tsv",
+        log = "logs/DESeq2.log"
 
 rule all_downloads:
     input:
@@ -24,3 +25,6 @@ include: "rules/init.smk"
 
 # Adding rules for the RNA-seq pipeline
 include: "rules/rnaseq.smk"
+
+# Adding rules for the differencial expression
+include: "rules/diff_expression.smk"

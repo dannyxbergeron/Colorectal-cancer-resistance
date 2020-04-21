@@ -3,6 +3,7 @@ from rules.init import inputLong
 from functools import partial
 
 rule change_names:
+    """ Change the names to make it more easy to know who's who """
     input:
         long_id_files = partial(inputLong, config)
     output:
